@@ -62,6 +62,24 @@ set -g @ai-summarize-api-key 'sk-...'
 set -g @ai-summarize-model 'gpt-5.4-nano'
 ```
 
+If you use env vars, tmux has to import them. The plugin runs from the tmux
+server environment, not from the shell in the pane. If `OPENAI_API_KEY` is set
+in your shell but tmux was already running, the plugin will still report a
+missing key.
+
+Append the variables you use to tmux's `update-environment` list:
+
+```tmux
+set -ag update-environment " OPENAI_API_KEY OPENAI_BASE_URL TMUX_AI_SUMMARIZE_API_KEY TMUX_AI_SUMMARIZE_BASE_URL TMUX_AI_SUMMARIZE_MODEL"
+```
+
+For a tmux server that is already running, import the current shell values:
+
+```sh
+tmux set-environment -g OPENAI_API_KEY "$OPENAI_API_KEY"
+tmux set-environment -g OPENAI_BASE_URL "$OPENAI_BASE_URL"
+```
+
 ## OpenAI-Compatible API
 
 Use any OpenAI-compatible API by setting a different base URL. Default: `https://api.openai.com/v1`.
